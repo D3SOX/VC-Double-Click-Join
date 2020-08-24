@@ -1,4 +1,4 @@
-# Double Click Voice Channels [![CodeFactor](https://www.codefactor.io/repository/github/hellbound1337/relationships-notifier/badge)](https://www.codefactor.io/repository/github/hellbound1337/relationships-notifier)
+# Double Click Voice Channels [![CodeFactor](https://www.codefactor.io/repository/github/hellbound1337/double-click-vc/badge)](https://www.codefactor.io/repository/github/hellbound1337/double-click-vc)
 
 A powercord plugin that requires you to double click voice channels to join them.
 
