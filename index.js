@@ -16,10 +16,8 @@ module.exports = class extends Plugin {
             } else {
                this.log('Failed to get nested props.')
             }
-         } else {
-            if(!channel) {
+         } else if(!channel) { {
                this.log('Failed to determine channel type.')
-            }
          }
          return res
       })
