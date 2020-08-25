@@ -19,6 +19,8 @@ module.exports = class extends Plugin {
          } else if (!channel) {
             this.log('Failed to determine channel type.');
          }
+         
+         return res
       });
    }
 
