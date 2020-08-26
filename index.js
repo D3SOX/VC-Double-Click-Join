@@ -2,7 +2,7 @@ const { Plugin } = require('powercord/entities');
 const { inject, uninject } = require('powercord/injector');
 const { getModuleByDisplayName } = require('powercord/webpack');
 
-module.exports = class extends Plugin {
+module.exports = class DoubleClickVc extends Plugin {
    async startPlugin() {
       const ChannelItem = getModuleByDisplayName('ChannelItem', false);
       inject('double-click-vc', ChannelItem.prototype, 'render', (args, res) => {
