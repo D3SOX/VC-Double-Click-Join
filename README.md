@@ -8,9 +8,9 @@ A powercord plugin that requires you to double click voice channels to join them
 
 # Installation
 
--  `git clone https://github.com/hellbound1337/double-click-vc.git`
+-  `git clone https://github.com/Twizzer/VC-Double-Click-Join.git`
 
 # Support
 
--  hellbound#9999
--  Support Server: https://discord.gg/pCc7q4Z
+-  Twizzer#0001
+-  Support Server: https://discord.gg/pKx8m6Z
