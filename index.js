@@ -1,11 +1,12 @@
 const { Plugin } = require('powercord/entities');
 const { inject, uninject } = require('powercord/injector');
-const { getModuleByDisplayName } = require('powercord/webpack');
+const { getModule } = require('powercord/webpack');
 
 module.exports = class DoubleClickVc extends Plugin {
    async startPlugin() {
-      const ChannelItem = getModuleByDisplayName('ChannelItem', false);
-      inject('double-click-vc', ChannelItem.prototype, 'render', (args, res) => {
+      const ChannelItem = await getModule(m => m.default && m.default.displayName === 'ChannelItem');
+      const oDefault = ChannelItem.default
+      inject('double-click-vc', ChannelItem, 'default', (args, res) => {
          const channel = this.getNestedProp(res, 'props.children.props.children.1.props.children.1.props.children.1.props.channel');
          if (channel && channel.type == 2) {
             const props = this.getNestedProp(res, 'props.children.props.children.1.props.children.0.props');
@@ -22,6 +23,7 @@ module.exports = class DoubleClickVc extends Plugin {
          
          return res
       });
+      Object.assign(ChannelItem.default, oDefault)
    }
 
    pluginWillUnload() {
