@@ -4,8 +4,7 @@ const { getModule } = require('powercord/webpack');
 
 module.exports = class DoubleClickVc extends Plugin {
     async startPlugin() {
-        const ChannelItem = await getModule(m => m.default && m.default.displayName === 'ChannelItem');
-        const oDefault = ChannelItem.default;
+        const ChannelItem = await getModule(m => m.default?.displayName === 'ChannelItem');
         inject('double-click-vc', ChannelItem, 'default', (args, res) => {
             const channel = this.getNestedProp(res, 'props.children.props.children.1.props.children.1.props.children.1.props.channel');
             if (channel && (channel.type === 2 || channel.type === 13)) {
@@ -22,11 +21,25 @@ module.exports = class DoubleClickVc extends Plugin {
 
             return res;
         });
-        Object.assign(ChannelItem.default, oDefault);
+
+        const Mention = await getModule(m => m.default?.displayName === 'Mention');
+        inject('double-click-vc-mention', Mention, 'default', (args, res) => {
+            const label = this.getNestedProp(res, 'props.children.0.props.aria-label');
+            if (label) {
+                const { props } = res;
+                props.onDoubleClick = props.onClick;
+                delete props.onClick;
+            } else if (!label) {
+                this.log('Failed to determine label type.');
+            }
+
+            return res;
+        });
     }
 
     pluginWillUnload() {
         uninject('double-click-vc');
+        uninject('double-click-vc-mention');
     }
 
     getNestedProp(obj, path) {
