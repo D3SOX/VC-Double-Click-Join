@@ -8,7 +8,7 @@ module.exports = class DoubleClickVc extends Plugin {
       const oDefault = ChannelItem.default
       inject('double-click-vc', ChannelItem, 'default', (args, res) => {
          const channel = this.getNestedProp(res, 'props.children.props.children.1.props.children.1.props.children.1.props.channel');
-         if (channel && channel.type == 2) {
+         if (channel && (channel.type === 2 || channel.type === 13)) {
             const props = this.getNestedProp(res, 'props.children.props.children.1.props.children.0.props');
             if (props) {
                const onClick = props.onClick;
@@ -20,7 +20,7 @@ module.exports = class DoubleClickVc extends Plugin {
          } else if (!channel) {
             this.log('Failed to determine channel type.');
          }
-         
+
          return res
       });
       Object.assign(ChannelItem.default, oDefault)
