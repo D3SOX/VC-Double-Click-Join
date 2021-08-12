@@ -1,4 +1,4 @@
-# Double Click Voice Channels
+# double-click-voice-channels
 
 A Powercord plugin that requires you to double-click voice channels to join them.
 
