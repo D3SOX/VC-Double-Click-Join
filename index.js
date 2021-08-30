@@ -25,12 +25,10 @@ module.exports = class DoubleClickVc extends Plugin {
         const Mention = await getModule(m => m.default?.displayName === 'Mention');
         inject('double-click-vc-mention', Mention, 'default', (args, res) => {
             const label = this.getNestedProp(res, 'props.children.0.props.aria-label');
-            if (label) {
+            if (label && label === 'Voice Channel') {
                 const { props } = res;
                 props.onDoubleClick = props.onClick;
                 delete props.onClick;
-            } else if (!label) {
-                this.log('Failed to determine label type.');
             }
 
             return res;
