@@ -35,6 +35,9 @@ module.exports = class DoubleClickVc extends Plugin {
 
             return res;
         });
+
+        ChannelItem.default.displayName = 'ChannelItem';
+        Mention.default.displayName = 'Mention';
     }
 
     pluginWillUnload() {
