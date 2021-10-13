@@ -43,12 +43,6 @@ module.exports = class DoubleClickVc extends Plugin {
         uninject('double-click-vc-mention');
     }
 
-    getNestedProp(obj, path) {
-        return path.split('.').reduce(function (obj, prop) {
-            return obj && obj[prop];
-        }, obj);
-    }
-
     getChannel(obj) {
         for (const key in obj) {
             const inner = obj[key];
@@ -76,7 +70,7 @@ module.exports = class DoubleClickVc extends Plugin {
         }
         return null;
     }
-    
+
     getLabel(obj) {
         for (const key in obj) {
             const inner = obj[key];
