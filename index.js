@@ -43,13 +43,17 @@ module.exports = class DoubleClickVc extends Plugin {
         uninject('double-click-vc-mention');
     }
 
+    shouldDescend(key) {
+        return key === 'props' || key === 'children' || !isNaN(key);
+    }
+
     getChannel(obj) {
         for (const key in obj) {
             const inner = obj[key];
             if (inner && typeof inner === 'object') {
                 if (key === 'channel') {
                     return inner;
-                } else if (/props|children|[0-9]/.test(key)) {
+                } else if (this.shouldDescend(key)) {
                     return this.getChannel(inner);
                 }
             }
@@ -63,7 +67,7 @@ module.exports = class DoubleClickVc extends Plugin {
             if (inner && typeof inner === 'object') {
                 if (inner.onClick && inner.role === 'button') {
                     return inner;
-                } else if (/props|children|[0-9]/.test(key)) {
+                } else if (this.shouldDescend(key)) {
                     return this.getClickable(inner);
                 }
             }
@@ -77,7 +81,7 @@ module.exports = class DoubleClickVc extends Plugin {
             if (inner) {
                 if (key === 'aria-label') {
                     return inner;
-                } else if (typeof inner === 'object' && /props|children|[0-9]/.test(key)) {
+                } else if (typeof inner === 'object' && this.shouldDescend(key)) {
                     return this.getLabel(inner);
                 }
             }
