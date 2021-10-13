@@ -6,17 +6,17 @@ module.exports = class DoubleClickVc extends Plugin {
     async startPlugin() {
         const ChannelItem = await getModule(m => m.default?.displayName === 'ChannelItem');
         inject('double-click-vc', ChannelItem, 'default', (args, res) => {
-            const channel = this.getNestedProp(res, 'props.children.props.children.1.props.children.1.props.children.1.props.channel');
-            if (channel && (channel.type === 2 || channel.type === 13)) {
-                const props = this.getNestedProp(res, 'props.children.props.children.1.props.children.0.props');
-                if (props) {
-                    props.onDoubleClick = props.onClick;
-                    delete props.onClick;
-                } else {
-                    this.log('Failed to get nested props.');
+            const channel = this.getChannel(res);
+            if (channel) {
+                if (channel.type === 2 || channel.type === 13) {
+                    const clickable = this.getClickable(res);
+                    if (clickable) {
+                        clickable.onDoubleClick = clickable.onClick;
+                        delete clickable.onClick;
+                    }
                 }
-            } else if (!channel) {
-                this.log('Failed to determine channel type.');
+            } else {
+                this.log('Failed to find channel.');
             }
 
             return res;
@@ -24,7 +24,7 @@ module.exports = class DoubleClickVc extends Plugin {
 
         const Mention = await getModule(m => m.default?.displayName === 'Mention');
         inject('double-click-vc-mention', Mention, 'default', (args, res) => {
-            const label = this.getNestedProp(res, 'props.children.0.props.aria-label');
+            const label = this.getLabel(res);
             if (label && label === 'Voice Channel') {
                 const { props } = res;
                 props.onDoubleClick = props.onClick;
@@ -47,5 +47,47 @@ module.exports = class DoubleClickVc extends Plugin {
         return path.split('.').reduce(function (obj, prop) {
             return obj && obj[prop];
         }, obj);
+    }
+
+    getChannel(obj) {
+        for (const key in obj) {
+            const inner = obj[key];
+            if (inner && typeof inner === 'object') {
+                if (key === 'channel') {
+                    return inner;
+                } else if (/props|children|[0-9]/.test(key)) {
+                    return this.getChannel(inner);
+                }
+            }
+        }
+        return null;
+    }
+
+    getClickable(obj) {
+        for (const key in obj) {
+            const inner = obj[key];
+            if (inner && typeof inner === 'object') {
+                if (inner.onClick && inner.role === 'button') {
+                    return inner;
+                } else if (/props|children|[0-9]/.test(key)) {
+                    return this.getClickable(inner);
+                }
+            }
+        }
+        return null;
+    }
+    
+    getLabel(obj) {
+        for (const key in obj) {
+            const inner = obj[key];
+            if (inner) {
+                if (key === 'aria-label') {
+                    return inner;
+                } else if (typeof inner === 'object' && /props|children|[0-9]/.test(key)) {
+                    return this.getLabel(inner);
+                }
+            }
+        }
+        return null;
     }
 };
